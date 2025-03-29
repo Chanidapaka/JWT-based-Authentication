@@ -5,10 +5,10 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.4.3</version>
+        <version>3.4.4</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>sit.int204</groupId>
+    <groupId>com.example</groupId>
     <artifactId>jwt-demo</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>jwt-demo</name>
@@ -78,15 +78,19 @@
             <version>1.78.1</version>
         </dependency>
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.36</version>
+            <version>1.18.30</version>  <!-- ใช้เวอร์ชันล่าสุด -->
+            <scope>provided</scope>
         </dependency>
-        <dependency>
-            <groupId>com.nimbusds</groupId>
-            <artifactId>nimbus-jose-jwt</artifactId>
-            <version>10.0.2</version>
-        </dependency>
+
+
+
     </dependencies>
 
     <build>

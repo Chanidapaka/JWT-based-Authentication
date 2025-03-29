@@ -1,10 +1,12 @@
-package sit.int204.jwtdemo.entities;
+package sit.int204.jwtdemo.entities.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Entity
-@Table(name = "users")
+@Table(name="users")
 @Data
 public class User {
     @Id
@@ -19,5 +21,5 @@ public class User {
     @Column(length = 40)
     private String name;
     @Column(length = 60)
-    private String roles; //comma separate roles}
+    private String roles; //comma separate roles
 }

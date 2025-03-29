@@ -1,4 +1,4 @@
-package sit.int204.jwtdemo;
+package sit.int204.jwtdemo.entities;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

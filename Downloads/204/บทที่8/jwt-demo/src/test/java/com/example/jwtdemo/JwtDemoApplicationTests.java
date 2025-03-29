@@ -1,4 +1,4 @@
-package sit.int204.jwtdemo;
+package com.example.jwtdemo;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
