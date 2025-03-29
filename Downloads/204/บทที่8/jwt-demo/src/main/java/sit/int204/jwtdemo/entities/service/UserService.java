@@ -71,8 +71,10 @@ public class UserService {
                 UsernamePasswordAuthenticationToken(
                 user.getUsername(), user.getPassword());
             authenticationManager.authenticate(upat); //ส่งไปแล้ว ดึงauthenticationManager มาใช้
-            //401 if failed
-            UserDetails userDetails = jwtUserDetailsService.loadUserByUsername(user.getUsername()); //ถ้าผ่่าน จะload  user มาอีกรอบนึง
+
+            //Exception occurred with (401) if failed
+            UserDetails userDetails = jwtUserDetailsService
+                    .loadUserByUsername(user.getUsername()); //ถ้าผ่่าน จะ load  user มาอีกรอบนึง
             return jwtUtils.generateToken(userDetails); //ได้ token เพื่อให้ controller เอาไปใช้
     }
 }

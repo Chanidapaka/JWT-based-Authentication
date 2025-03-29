@@ -2,10 +2,17 @@ package sit.int204.jwtdemo.entities.configs;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import sit.int204.jwtdemo.entities.service.JwtUserDetailsService;
 
 //ซึ่งใช้ในการตั้งค่าการควบคุมการเข้าถึง (access control) สำหรับแอปพลิเคชันที่ใช้ Spring Boot โดยตั้งค่าต่างๆ ผ่าน HttpSecurity ใน Spring Security
 @EnableWebSecurity //ใช้ในการเปิดใช้งาน Spring Security ในแอปพลิเคชัน ทำให้สามารถตั้งค่าความปลอดภัยของเว็บแอปพลิเคชันได้
@@ -36,5 +43,30 @@ public class WebSecurityConfig {
 
         //สร้างและคืนค่าการตั้งค่าความปลอดภัยที่ถูกกำหนดใน http เพื่อให้ Spring Security ใช้ในการรักษาความปลอดภัยของแอปพลิเคชัน
         return http.build();
+    }
+
+    //เพื่อที่จะทำ Autowire ได้
+    //ใช้ในการจัดการการตรวจสอบการเข้าสู่ระบบของผู้ใช้
+    @Bean
+    public AuthenticationManager authenticationManager(
+            AuthenticationConfiguration config) throws Exception {
+        return config.getAuthenticationManager();
+    }
+
+    //เพื่อที่จะทำ jwtUserDetailsService
+    //เมธอดนี้ตั้งค่าการใช้ PasswordEncoder ซึ่งจะใช้ในการเข้ารหัสและตรวจสอบรหัสผ่านของผู้ใช้
+    @Bean
+    public AuthenticationProvider authenticationProvider(JwtUserDetailsService jwtUserDetailsService) {
+        // คือการใช้การตรวจสอบผู้ใช้จากฐานข้อมูล.
+        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
+        authenticationProvider.setUserDetailsService(jwtUserDetailsService);
+        authenticationProvider.setPasswordEncoder(passwordEncoder());
+        return authenticationProvider;
+    }
+
+    //เมธอดนี้กำหนด PasswordEncoder ซึ่งใช้ในการเข้ารหัสรหัสผ่านของผู้ใช้ก่อนที่จะเก็บในฐานข้อมูลและตรวจสอบเวลาที่ผู้ใช้ทำการล็อกอิน.
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return Argon2PasswordEncoder.defaultsForSpringSecurity_v5_8(); //ใช้ Argon2PasswordEncoder ซึ่งเป็นหนึ่งในวิธีการเข้ารหัสที่มีความปลอดภัยสูง.
     }
 }
