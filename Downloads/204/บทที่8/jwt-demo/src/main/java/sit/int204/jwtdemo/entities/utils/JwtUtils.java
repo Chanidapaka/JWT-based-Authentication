@@ -1,23 +1,32 @@
 package sit.int204.jwtdemo.entities.utils;
 
-import lombok.Value;
+
+
+import com.nimbusds.jose.*;
+import com.nimbusds.jose.crypto.RSASSASigner;
+import com.nimbusds.jose.crypto.RSASSAVerifier;
+import com.nimbusds.jose.jwk.RSAKey;
+import com.nimbusds.jose.jwk.gen.RSAKeyGenerator;
+import com.nimbusds.jwt.JWTClaimsSet;
+import com.nimbusds.jwt.SignedJWT;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ResponseStatusException;
+import sit.int204.jwtdemo.entities.Dto.AccessToken;
 import sit.int204.jwtdemo.entities.entities.AuthUserDetail;
-
-import java.security.interfaces.RSAKey;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.Map;
 
+
 //ที่ใช้สำหรับการจัดการ JSON Web Token (JWT)
 @Component
 public class JwtUtils {
-    @Value("#{${app.security.jwt.token-max-interval-in-minute}*1000*60}") //ใช้เพื่อดึงค่าจากไฟล์ application.properties
-    private long MAX_TOKEN_INTERVAL; //แล้วเอามาเก็บไว้ในนี้ คำนวณให้เป็นเวลาสูงสุดที่อนุญาตให้ใช้ JWT (ในหน่วยมิลลิวินาที)
 
+    @Value("#{${app.security.jwt.token-max-interval-in-minute}*1000*60}")//ใช้เพื่อดึงค่าจากไฟล์ application.properties
+    private long MAX_TOKEN_INTERVAL; //แล้วเอามาเก็บไว้ในนี้ คำนวณให้เป็นเวลาสูงสุดที่อนุญาตให้ใช้ JWT (ในหน่วยมิลลิวินาที)
 
     @Value("${app.security.jwt.key-id}") //คำนวนแล้วเอามาเก็บไว้
     private String KEY_ID; //ใช้เป็นตัวระบุของ RSA Key ที่ใช้ในการเข้ารหัส JWT
@@ -76,6 +85,7 @@ public class JwtUtils {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Verified Error, Invalid JWT", ex);
         }
     }
+
 
     //ดึงข้อมูล Claims จาก JWT ที่ให้มา เช่น subject, issuer, exp (เวลาหมดอายุ), และ uid (ID ของผู้ใช้)
     public Map<String, Object> getJWTClaimsSet(String token) {
